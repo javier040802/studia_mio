@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Studia - Registro</title>
+</head>
+<body>
+  <h1>Registro</h1>
+  <form id="registerForm">
+    <input type="text" id="username" name="username" placeholder="Usuario" required><br>
+    <input type="email" id="email" name="email" placeholder="Email" required><br>
+    <input type="password" id="password" name="password" placeholder="Contraseña" required><br>
+    <button type="submit">Registrarse</button>
+  </form>
+  <p><a href="/login.html">Ya tengo cuenta</a></p>
+
+  <script>
+    // Guarda usuarios en localStorage como arreglo de objetos {username,email,password}
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!username || !email || !password) return alert('Completa todos los campos');
+
+      const stored = JSON.parse(localStorage.getItem('studia_users') || '[]');
+      if (stored.find(u => u.email === email)) return alert('Ya existe una cuenta con ese email');
+
+      stored.push({ username, email, password });
+      localStorage.setItem('studia_users', JSON.stringify(stored));
+
+      // Coloca el usuario como "logueado" y redirige al menú principal (index)
+      localStorage.setItem('studia_current_user', email);
+      window.location.href = '/index.html';
+    });
+  </script>
+</body>
+</html>
